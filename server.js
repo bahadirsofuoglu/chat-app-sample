@@ -2,16 +2,22 @@ const app = require("express")();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 let users = [];
 let messages = [];
 
-mongoose
-  .connect(
-    "mongodb+srv://root:o71ogBvukvvWYelg@relationships.ynfqq.mongodb.net/relationships?retryWrites=true&w=majority"
-  )
-  .then(() => console.log("MongoDB connected..."))
-  .catch((err) => console.log(err));
-
+mongoose.connect(
+  process.env.MONGODB_URI,
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
+  (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("connected DB!");
+    }
+  }
+);
 const ChatSchema = mongoose.Schema({
   username: String,
   msg: String,
